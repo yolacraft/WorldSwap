@@ -2,10 +2,11 @@
   "schemaVersion": 1,
   "id": "worldswap",
   "version": "${version}",
-  "name": "EddyWorldSwap",
-  "description": "",
+  "name": "WorldSwap",
+  "description": "A simple Minecraft mod that resets the world at set intervals, but keeps your inventory and other player data. ",
   "authors": [],
   "contact": {},
+  "icon": "assets/worldswap/icon.png",
   "license": "MIT",
   "environment": "*",
   "entrypoints": {

@@ -15,7 +15,7 @@ public class ConfigClass implements SpeedrunConfig {
     public int minutes = 5;
 
     @Config.Category("worldswap")
-    public boolean isIGT = false;
+    public boolean isIGT = true;
 
     @Override
     public String modID() {

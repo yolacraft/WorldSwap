@@ -51,7 +51,13 @@ public class PlayerBackup {
         }
         player.currentScreenHandler.sendContentUpdates();
 
-        player.clearStatusEffects();
+        // Kopiere die aktuellen Effekte in eine neue Liste, um ConcurrentModificationException zu vermeiden
+        Collection<StatusEffectInstance> currentEffects = new ArrayList<>(player.getStatusEffects());
+        // Entferne alle aktuellen Effekte
+        for (StatusEffectInstance effect : currentEffects) {
+            player.removeStatusEffect(effect.getEffectType());
+        }
+        // Füge die gespeicherten Effekte hinzu
         for (StatusEffectInstance effect : data.effects) {
             player.addStatusEffect(new StatusEffectInstance(effect));
         }

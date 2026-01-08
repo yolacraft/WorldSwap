@@ -3,7 +3,6 @@ package de.yolacraft.worldswap.mixin;
 import de.yolacraft.worldswap.AutoClickCreateWorldScreen;
 import de.yolacraft.worldswap.PlayerBackup;
 import de.yolacraft.worldswap.RunState;
-import de.yolacraft.worldswap.WorldSwap;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -37,8 +36,13 @@ public class GameTickMixin {
         if (RunState.restore) {
             System.out.println("RESTORE");
 
-            if (RunState.playerBackup != null) {
-                PlayerBackup.restore(serverPlayer, RunState.playerBackup);
+            if (RunState.playerBackup != null && client.getServer() != null) {
+                // Führe das Restore auf dem Server-Thread aus, um ConcurrentModificationException zu vermeiden
+                final ServerPlayerEntity player = serverPlayer;
+                final PlayerBackup backup = RunState.playerBackup;
+                client.getServer().execute(() -> {
+                    PlayerBackup.restore(player, backup);
+                });
                 RunState.playerBackup = null;
                 RunState.restore = false;
             }
@@ -62,9 +66,23 @@ public class GameTickMixin {
 
             RunState.continueNXT = true;
             RunState.restore = true;
+            RunState.done = false; // Starte Timer wieder beim World-Swap
 
             System.out.println("SAVE");
             RunState.playerBackup = new PlayerBackup(serverPlayer);
+
+            // Speichere playtime vor dem disconnect
+            if (client.getServer() != null) {
+                try {
+                    java.nio.file.Path worldDir = client.getServer().getSavePath(net.minecraft.util.WorldSavePath.ROOT);
+                    java.nio.file.Path playtimeFile = worldDir.resolve("playtime.txt");
+                    String content = String.valueOf(RunState.playtime);
+                    java.nio.file.Files.write(playtimeFile, content.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+                    System.out.println("[WorldSwap] Playtime gespeichert: " + RunState.playtime);
+                } catch (java.io.IOException e) {
+                    System.err.println("[WorldSwap] konnte playtime.txt nicht speichern: " + e.getMessage());
+                }
+            }
 
             client.openScreen(new AutoClickCreateWorldScreen((Screen) null));
 

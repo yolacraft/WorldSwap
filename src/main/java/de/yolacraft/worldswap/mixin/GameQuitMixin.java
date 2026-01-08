@@ -2,6 +2,7 @@ package de.yolacraft.worldswap.mixin;
 
 import de.yolacraft.worldswap.RunState;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.WorldSavePath;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -13,24 +14,27 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-@Mixin(MinecraftClient.class)
+@Mixin(ClientWorld.class)
 public class GameQuitMixin {
 
-    @Inject(method = "disconnect*", at = @At("HEAD"))
+    @Inject(method = "disconnect", at = @At("HEAD"))
     private void disconnect(CallbackInfo ci) {
-        MinecraftClient client = (MinecraftClient) (Object) this;
+        MinecraftClient client = MinecraftClient.getInstance();
 
-        if (client.getServer() != null) {
+        if (client != null && client.getServer() != null) {
             try {
                 Path worldDir = client.getServer().getSavePath(WorldSavePath.ROOT);
                 Path playtimeFile = worldDir.resolve("playtime.txt");
 
                 String content = String.valueOf(RunState.playtime);
                 Files.write(playtimeFile, content.getBytes(StandardCharsets.UTF_8));
+                System.out.println("[WorldSwap] Playtime gespeichert beim disconnect: " + RunState.playtime);
 
             } catch (IOException e) {
                 System.err.println("[WorldSwap] konnte playtime.txt nicht speichern: " + e.getMessage());
             }
         }
+
+        RunState.done = false;
     }
 }
