@@ -1,12 +1,15 @@
-# WorldSwap 1.2 for FabricMC (1.16.1)
+## WorldSwap 1.2 for FabricMC (1.16.1)
 
-A simple Minecraft mod that resets the world at set intervals, but keeps your inventory and other player data. 
+WorldSwap is a challenging yet fun Minecraft speedrun challenge that resets the world at configurable intervals while preserving your inventory and other player data.
 
 ### Installation
-Fabric 0.18.1+ AND Fabric API is requiered. Speedrun API is recommended to configure the mod (Default is 5 minutes).
+Fabric Loader **0.18.1 or newer** and the **Fabric API** are required.  
+The [Speedrun API](https://github.com/contariaa/SpeedrunAPI/releases/tag/v2.0%2B1.16.1) is recommended for configuration (default interval: 5 minutes).
 
 ### Usage
-Simply create a world and enjoy :) After your set interval a new world will be created. Configuration can be found in using Speedrun API (Options -> Book and Quil).
+Simply create a world and start playing.
+After the configured interval, a new world will automatically be generated.  
+You can change the configuration using the Speedrun API menu (**Options → Book and Quill**).
 
-### Support my work
-https://ko-fi.com/yolacraft29073
+### Feedback
+I am always open to feedback. Discord: @yolacraft (dms open)
