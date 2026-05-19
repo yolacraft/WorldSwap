@@ -2,10 +2,12 @@ package de.yolacraft.worldswap;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.biomes.v1.OverworldBiomes;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.world.biome.source.BiomeSource;
 
 @Environment(EnvType.CLIENT)
 public class HudOverlay implements HudRenderCallback {
@@ -26,12 +28,13 @@ public class HudOverlay implements HudRenderCallback {
         int text1Width = renderer.getWidth(text1);
         int x1 = screenWidth / 2 - text1Width - 2;
 
-        drawOutlinedText(matrices, renderer, text1, x1, y, 0x54FCFC);
+        drawOutlinedText(matrices, renderer, text1, x1, y, parseColor(RunState.color1));
+
 
         String text2 = RunState.displayText2;
         int x2 = screenWidth / 2 + 2;
 
-        drawOutlinedText(matrices, renderer, text2, x2, y, 0xFCFC54);
+        drawOutlinedText(matrices, renderer, text2, x2, y, parseColor(RunState.color2));
     }
 
     private void drawOutlinedText(MatrixStack matrices, TextRenderer renderer,
@@ -46,4 +49,13 @@ public class HudOverlay implements HudRenderCallback {
 
         renderer.draw(matrices, text, x, y, color);
     }
+
+
+    public static int parseColor(String hex) {
+        if (hex.startsWith("#")) {
+            hex = hex.substring(1);
+        }
+        return (int) Long.parseLong(hex, 16);
+    }
+
 }

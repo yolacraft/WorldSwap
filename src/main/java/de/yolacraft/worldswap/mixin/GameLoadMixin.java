@@ -3,13 +3,12 @@ package de.yolacraft.worldswap.mixin;
 import de.yolacraft.worldswap.RunState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.WorldSavePath; // Import hinzugefügt
+import net.minecraft.util.WorldSavePath;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-// Imports für Dateioperationen
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -29,8 +28,6 @@ public class GameLoadMixin {
     private void afterJoinWorld(ClientWorld world, CallbackInfo ci) {
 
         if (previousWorld == null) {
-
-
 
             MinecraftClient client = MinecraftClient.getInstance();
 
@@ -69,9 +66,6 @@ public class GameLoadMixin {
                 }
             } else {
                 RunState.playtime = 0;
-
-
-
             }
         }
     }

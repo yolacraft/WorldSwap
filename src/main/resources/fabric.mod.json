@@ -4,7 +4,14 @@
   "version": "${version}",
   "name": "WorldSwap",
   "description": "A simple Minecraft mod that resets the world at set intervals, but keeps your inventory and other player data. ",
-  "authors": [],
+  "authors": [
+    {
+      "name": "yolacraft",
+      "contact": {
+        "homepage": "https://github.com/yolacraft/"
+      }
+    }
+  ],
   "contact": {},
   "icon": "assets/worldswap/icon.png",
   "license": "MIT",

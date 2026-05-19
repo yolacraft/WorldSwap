@@ -9,6 +9,7 @@ public class WorldSwap implements ModInitializer {
     @Override
     public void onInitialize() {
         config = new ConfigClass();
+        LANServerInit.register();
     }
 }
 

@@ -1,5 +1,10 @@
 package de.yolacraft.worldswap;
 
+import net.minecraft.client.network.ServerInfo;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class RunState {
     public static int playtime;
     public static boolean done;
@@ -12,6 +17,15 @@ public class RunState {
     public static boolean continueNXT = false;
     public static boolean restore = false;
     public static boolean isIGT = false;
+    public static boolean coop = false;
+    public static String lastServer;
+    public static int lastPort;
+    public static int coopport = 25565;
+    public static boolean fixlan = false;
+    public static Map<String, PlayerBackup> coopUserBackup = new HashMap<>();
+    public static boolean AtumMode = false;
+    public static String color1 = "#54FCFC";
+    public static String color2 = "#FCFC54";
 
     public static void reCalcTimer(int time) {
         playtime = time;

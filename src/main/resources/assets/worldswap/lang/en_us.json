@@ -1,7 +1,13 @@
 {
+  "speedrunapi.config.worldswap.category.coop": "CO-OP Mode",
+  "speedrunapi.config.worldswap.category.experimental": "Experimental Features",
+  "speedrunapi.config.worldswap.category.timer": "Timer",
+  "speedrunapi.config.worldswap.category.worldswap": "World Swap",
+  "speedrunapi.config.worldswap.option.atum_compatability": "Atum Compatability",
+  "speedrunapi.config.worldswap.option.color1": "Left Color",
+  "speedrunapi.config.worldswap.option.color2": "Right Color",
+  "speedrunapi.config.worldswap.option.coop": "Enable auto LAN",
   "speedrunapi.config.worldswap.option.isIGT": "IGT Mode",
   "speedrunapi.config.worldswap.option.minutes": "Minutes",
-  "speedrunapi.config.worldswap.category.worldswap": "World Swap"
+  "speedrunapi.config.worldswap.option.port": "LAN Port"
 }
-
-

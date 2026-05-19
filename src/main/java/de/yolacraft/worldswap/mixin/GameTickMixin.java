@@ -3,13 +3,23 @@ package de.yolacraft.worldswap.mixin;
 import de.yolacraft.worldswap.AutoClickCreateWorldScreen;
 import de.yolacraft.worldswap.PlayerBackup;
 import de.yolacraft.worldswap.RunState;
+import me.contaria.speedrunapi.util.TextUtil;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.SaveLevelScreen;
+import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
+import net.minecraft.world.GameMode;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Mixin(MinecraftClient.class)
 public class GameTickMixin {
@@ -19,8 +29,19 @@ public class GameTickMixin {
 
         MinecraftClient client = MinecraftClient.getInstance();
 
-        if (client.world == null)
+        if (client.world == null){if(RunState.fixlan){
+            RunState.fixlan = false;
+            client.openScreen(new AutoClickCreateWorldScreen(null));
+        }
             return;
+        }
+
+        if(RunState.rem-5 == 0){
+            if(RunState.coop && MinecraftClient.getInstance().getServer() != null && client.player != null) {
+                MinecraftClient.getInstance().getServer().openToLan(GameMode.SURVIVAL, false, RunState.coopport);
+                client.player.sendMessage(Text.method_30163("World opened to LAN on Port " + RunState.coopport + " (CO-OP Mode)"), false);
+            }
+        }
 
         ServerPlayerEntity serverPlayer = null;
 
@@ -66,7 +87,8 @@ public class GameTickMixin {
 
             RunState.continueNXT = true;
             RunState.restore = true;
-            RunState.done = false; // Starte Timer wieder beim World-Swap
+            RunState.fixlan = true;
+            RunState.done = false;
 
             System.out.println("SAVE");
             RunState.playerBackup = new PlayerBackup(serverPlayer);
@@ -83,10 +105,55 @@ public class GameTickMixin {
                     System.err.println("[WorldSwap] konnte playtime.txt nicht speichern: " + e.getMessage());
                 }
             }
+            if (client.getServer() != null && client.player != null) {
 
-            client.openScreen(new AutoClickCreateWorldScreen((Screen) null));
+                UUID hostUUID = client.player.getUuid();
 
+                List<ServerPlayerEntity> players = new ArrayList<>(client.getServer().getPlayerManager().getPlayerList());
+                for (ServerPlayerEntity player : players) {
+                    if (!player.getUuid().equals(hostUUID)) {
+                        player.networkHandler.disconnect(Text.method_30163("worldswap.reset"));
+                    }
+                }
+
+            }
+
+            if(FabricLoader.getInstance().isModLoaded("atum") && isAtumRunning() && RunState.AtumMode) {
+                stopAtumIfPresent();
+            }
             client.world.disconnect();
+
         }
     }
+
+    private static void stopAtumIfPresent() {
+        if (!FabricLoader.getInstance().isModLoaded("atum")) return;
+
+        try {
+            Class<?> atumClass = Class.forName("me.voidxwalker.autoreset.Atum");
+            Method stopRunning = atumClass.getMethod("stopRunning");
+            stopRunning.invoke(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static boolean isAtumRunning() {
+        if (!FabricLoader.getInstance().isModLoaded("atum")) {
+            return false;
+        }
+
+        try {
+            Class<?> atumClass = Class.forName("me.voidxwalker.autoreset.Atum");
+
+            return (boolean) atumClass.getMethod("isRunning").invoke(null);
+
+        } catch (ClassNotFoundException e) {
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }

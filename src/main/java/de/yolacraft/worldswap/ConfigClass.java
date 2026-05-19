@@ -17,6 +17,26 @@ public class ConfigClass implements SpeedrunConfig {
     @Config.Category("worldswap")
     public boolean isIGT = true;
 
+
+
+    @Config.Category("coop")
+    public boolean coop = false;
+
+    @Config.Category("coop")
+    @Config.Numbers.Whole.Bounds(min = 1024, max = 65565)
+    @Config.Numbers.TextField
+    public int port = 25565;
+
+    @Config.Category("timer")
+    @Config.Strings.MaxChars(7)
+    public String color1 = "#54FCFC";
+    @Config.Category("timer")
+    @Config.Strings.MaxChars(7)
+    public String color2 = "#FCFC54";
+
+    @Config.Category("experimental")
+    public boolean atum_compatability = false;
+
     @Override
     public String modID() {
         return "worldswap";
@@ -36,5 +56,10 @@ public class ConfigClass implements SpeedrunConfig {
     public void onSave(JsonObject jsonObject){
         RunState.interval = minutes * 20 * 60;
         RunState.isIGT = isIGT;
+        RunState.coop = coop;
+        RunState.coopport = port;
+        RunState.AtumMode = atum_compatability;
+        RunState.color1 = color1;
+        RunState.color2 = color2;
     }
 }
